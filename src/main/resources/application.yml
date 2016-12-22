@@ -1,0 +1,46 @@
+spring:
+  jackson:
+    default-property-inclusion: non_null
+  cache:
+    cache-names: repos, responses
+    guava:
+      spec: maximumSize=500, expireAfterWrite=1m
+
+server:
+  port: 7101
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 1024
+
+shell:
+  ssh:
+    port: 2005
+
+info:
+  build:
+    name: ghcache
+    description: GitHub Cache server
+
+endpoints:
+  health:
+    path: /healthcheck
+
+github:
+  cached-uris:
+    - /
+    - /orgs/Netflix
+    - /orgs/Netflix/members
+    - /orgs/Netflix/repos
+  base-remote-url: https://api.github.com
+  consul-url: http://localhost:8500
+  repo-views-root: /orgs/Netflix/repos
+  repo-views:
+    - field: forks
+    - field: updated_at
+      path: last_updated
+      converter: fromDate
+    - field: open_issues
+    - field: stargazers_count
+      path: stars
+    - field: watchers
