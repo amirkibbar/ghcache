@@ -11,12 +11,15 @@ buildscript {
 
 plugins {
     id "ajk.gradle.consul" version "0.1.10"
+    id "com.jfrog.bintray" version "1.7.3"
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'idea'
+apply plugin: 'maven-publish'
 
+group = "ajk.ghcache"
 version = '0.0.1'
 
 repositories {
@@ -58,3 +61,69 @@ consul {
 task wrapper(type: Wrapper) {
     gradleVersion = "3.2.1"
 }
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'an exercise in API caching demonstrated on GitHub')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+model {
+    tasks.generatePomFileForMavenPublication {
+        destination = file("$buildDir/libs/ghcache-${project.version}.pom")
+    }
+}
+
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
+
+    publications = ['maven']
+
+    publish = true
+
+    pkg {
+        repo = 'maven'
+        name = 'ghcache'
+        websiteUrl = 'https://github.com/amirkibbar/ghcache'
+        issueTrackerUrl = 'https://github.com/amirkibbar/ghcache/issues'
+        vcsUrl = 'https://github.com/amirkibbar/ghcache.git'
+        licenses = ['Apache-2.0']
+        labels = ['ghcache']
+        version {
+            name = project.version
+        }
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+bintrayUpload.dependsOn = [sourcesJar, javadocJar]
