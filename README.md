@@ -140,3 +140,5 @@ All headers GitHub provides are passed back to the caller, however, the `Link` h
 are flattened (de-paginated).
 
 The service required Java 8.
+
+[![Build Status](https://travis-ci.org/amirkibbar/ghcache.svg?branch=master)](https://travis-ci.org/amirkibbar/ghcache)
