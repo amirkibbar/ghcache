@@ -1,5 +1,8 @@
 # GitHub Cache server
 
+[![Build Status](https://travis-ci.org/amirkibbar/ghcache.svg?branch=master)](https://travis-ci.org/amirkibbar/ghcache)
+[ ![Download](https://api.bintray.com/packages/amirk/maven/ghcache/images/download.svg) ](https://bintray.com/amirk/maven/ghcache/_latestVersion)
+
 This is an exercise that shows a server that can cache the [GitHub API](https://developer.github.com/v3/). This is 
 useful when clients would like to access GitHub's API in large volumes and you would want to prevent unnecessary burden 
 on GitHub.
@@ -140,5 +143,3 @@ All headers GitHub provides are passed back to the caller, however, the `Link` h
 are flattened (de-paginated).
 
 The service required Java 8.
-
-[![Build Status](https://travis-ci.org/amirkibbar/ghcache.svg?branch=master)](https://travis-ci.org/amirkibbar/ghcache)
