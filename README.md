@@ -32,34 +32,34 @@ All configuration items can be passed as one of these 3 options (using my.proper
 
 ## Ports
 
-The cache server listens for http requests on port 7101. Use the property server.port to configure it. 
+The cache server listens for http requests on port 7101. Use the property **server.port** to configure it. 
 
 ## Authentication
 
 The access to the GitHub API requires a GitHub Personal Access Token. Generate a token with the **org:read** permissions
-and pass this token to the server using the GITHUB_API_TOKEN environment variable, or by stating 
---github.api.token=<token> on the command line, or by passing github.api.token as a system property.
+and pass this token to the server using the **GITHUB_API_TOKEN** environment variable, or by stating 
+--github.api.token=<token> on the command line, or by passing **github.api.token** as a system property.
 
 The format of the token should be `<username>:<personal token>`, for example:
 `amirkibbar:12ab3cd4efa567b89cd0e1fa234b5fa56b7c8d90`
 
 ## Consul
 
-By default the service assumes Consul is running on localhost:8500, you can customize this with the github.consul-url
-property. 
+By default the service assumes Consul is running on localhost:8500, you can customize this with the 
+**github.consul-url** property. 
 
 The service caches the GitHub responses into Consul, using a custom tree in the Consul key value store. You can 
-customize the root of this tree, which by default is `github-cache`, using the github.consul-k-v-root property. 
+customize the root of this tree, which by default is `github-cache`, using the **github.consul-k-v-root property**. 
 
 ## Cached URIs
 
 You can change the default set of cached URIs. To do this copy the application.yml from src/main/resources and place it
-next to the jar, for example in build/libs, then edit the cached-uris section.
+next to the jar, for example in build/libs, then edit the **cached-uris** section.
 
 ## Repositories Views
 
 By default the service fetches all the repositories in the /orgs/Netflix/repos (configurable with 
-github.repo-views-root), and extracts some information from it for easier views of certain properties. These properties
+**github.repo-views-root**), and extracts some information from it for easier views of certain properties. These properties
 can be accessed with special URLs mentioned above, for example /view/top/{n}/forks. The attributes collected can be 
 configured, provided that they yield a number. For example, this is the default views configuration:
 
@@ -138,3 +138,5 @@ Query params are not passed through to the underlying GitHub remote server, they
 
 All headers GitHub provides are passed back to the caller, however, the `Link` header is filtered because all responses
 are flattened (de-paginated).
+
+The service required Java 8.
