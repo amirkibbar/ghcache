@@ -13,9 +13,10 @@ server:
     mime-types: application/json
     min-response-size: 1024
 
-shell:
-  ssh:
-    port: 2005
+management:
+  shell:
+    ssh:
+      port: 2005
 
 info:
   build:

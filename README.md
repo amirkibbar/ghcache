@@ -110,7 +110,7 @@ For example, to run it with the above GitHub token on port 8080:
 The service provides a /healthcheck URI which returns 200 when the service is ready. The service also provides a 
 /metrics URI which returns a set of useful metrics about the service.
 
-In addition port 2005 (by default, configure with shell.ssh.port) listens to SSH sessions, this is considered an 
+In addition port 2005 (by default, configure with **management.shell.ssh.port**) listens to SSH sessions, this is considered an 
 internal API to the service to debug it.
 
 # Architecture
