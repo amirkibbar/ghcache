@@ -8,8 +8,8 @@ import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.bouncycastle.util.encoders.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -17,6 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -44,6 +45,7 @@ public class CacheService {
 
     private Pattern cacheMaxAge = Pattern.compile(".*max-age=(\\p{Digit}*).*", CASE_INSENSITIVE);
 
+    @Cacheable(value = "responses", unless = "#result == null || #root.args[1]")
     public CachedResponse fetch(String path, boolean force) {
         CachedResponse response;
         if (force) {
@@ -130,7 +132,7 @@ public class CacheService {
     }
 
     private String decompress(String src) {
-        ByteArrayInputStream in = new ByteArrayInputStream(Base64.decode(src.getBytes()));
+        ByteArrayInputStream in = new ByteArrayInputStream(Base64.getDecoder().decode(src.getBytes()));
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (GZIPInputStream gzip = new GZIPInputStream(in)) {
             copy(gzip, out);
@@ -151,7 +153,7 @@ public class CacheService {
             return "";
         }
 
-        return new String(Base64.encode(out.toByteArray()));
+        return new String(Base64.getEncoder().encode(out.toByteArray()));
     }
 
     private String readNextLink(Header linkHeader) {

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class ConsulResponseRepository implements ResponseRepository {
     private MetricRegistry metrics;
 
     public CachedResponse store(String path, CachedResponse result) {
-        log.info("caching " + path + ", with result " + result.getContent());
+        log.info("caching " + path);
 
         try {
             String storeUrl = props.getConsulUrl().toString() + "/v1/kv/" + props.getConsulKVRoot() + path;
@@ -44,13 +43,12 @@ public class ConsulResponseRepository implements ResponseRepository {
                     .bodyString(mapper.writeValueAsString(result), TEXT_PLAIN)).returnResponse();
             log.info(path + ": " + response.getStatusLine());
         } catch (IOException e) {
-            log.warn("couldn't cache " + result + " in path " + path + ", " + e.getMessage(), e);
+            log.warn("couldn't cache path " + path + ", " + e.getMessage(), e);
         }
 
         return result;
     }
 
-    @Cacheable(value = "responses", unless = "#result == null")
     public CachedResponse fetch(String path) {
         try {
             // do some error validation - if the value doesn't exist in Consul - return null
